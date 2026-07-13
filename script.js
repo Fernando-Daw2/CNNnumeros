@@ -12,35 +12,77 @@ ctx.lineCap="round";
 
 let drawing=false;
 
+// Convierte la posición del puntero (ratón o dedo) a coordenadas reales
+// del canvas (280x280), aunque en pantalla se esté mostrando más pequeño.
+function getPos(e){
 
+    const rect=canvas.getBoundingClientRect();
 
-canvas.onmousedown=()=>drawing=true;
-canvas.onmouseup=()=>{
+    const scaleX=canvas.width/rect.width;
+    const scaleY=canvas.height/rect.height;
 
-drawing=false;
+    const point = e.touches && e.touches.length ? e.touches[0] : e;
 
-ctx.beginPath();
+    return {
+        x: (point.clientX-rect.left)*scaleX,
+        y: (point.clientY-rect.top)*scaleY
+    };
 
-};
+}
 
-canvas.onmousemove=(e)=>{
+function startDraw(e){
 
-if(!drawing)return;
+    e.preventDefault();
 
-const rect=canvas.getBoundingClientRect();
+    drawing=true;
 
-const x=e.clientX-rect.left;
-const y=e.clientY-rect.top;
+    const {x,y}=getPos(e);
 
-ctx.lineTo(x,y);
+    ctx.beginPath();
+    ctx.moveTo(x,y);
 
-ctx.stroke();
+}
 
-ctx.beginPath();
+function moveDraw(e){
 
-ctx.moveTo(x,y);
+    if(!drawing)return;
 
-};
+    e.preventDefault();
+
+    const {x,y}=getPos(e);
+
+    ctx.lineTo(x,y);
+
+    ctx.stroke();
+
+    ctx.beginPath();
+
+    ctx.moveTo(x,y);
+
+}
+
+function stopDraw(e){
+
+    if(e) e.preventDefault();
+
+    drawing=false;
+
+    ctx.beginPath();
+
+}
+
+// Ratón
+canvas.addEventListener("mousedown", startDraw);
+canvas.addEventListener("mousemove", moveDraw);
+canvas.addEventListener("mouseup", stopDraw);
+canvas.addEventListener("mouseleave", stopDraw);
+
+// Táctil (móvil/tablet). passive:false para poder usar preventDefault
+// y que el dedo no arrastre la página en vez de dibujar.
+canvas.addEventListener("touchstart", startDraw, {passive:false});
+canvas.addEventListener("touchmove", moveDraw, {passive:false});
+canvas.addEventListener("touchend", stopDraw, {passive:false});
+canvas.addEventListener("touchcancel", stopDraw, {passive:false});
 
 
 async function loadModel() {
@@ -187,7 +229,9 @@ const fill=document.createElement("div");
 
 fill.className="fill";
 
-fill.style.width=(probs[i]*400)+"px";
+// % en vez de px fijos: así la barra nunca se sale del contenedor,
+// sea cual sea el ancho de pantalla.
+fill.style.width=(probs[i]*100)+"%";
 
 const value=document.createElement("div");
 
