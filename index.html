@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Reconocimiento de Dígitos · CNN</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.22.0/dist/tf.min.js"></script>
+</head>
+<body>
+
+<div class="container">
+
+    <header class="page-head">
+        <span class="eyebrow">MODELO · CNN ENTRENADA EN MNIST</span>
+        <h1>Reconocimiento de Dígitos</h1>
+        <p class="subtitle">Dibuja un dígito del 0 al 9 en el lienzo. La red lo reduce a 28×28 píxeles y lo clasifica.</p>
+    </header>
+
+    <div class="layout">
+
+        <!-- Columna de dibujo -->
+        <section class="panel draw-panel">
+            <div class="panel-label">
+                <span>Lienzo</span>
+                <span class="dim">280×280</span>
+            </div>
+
+            <div class="canvas-wrap">
+                <canvas id="canvas" width="280" height="280"></canvas>
+                <div class="grid-overlay" aria-hidden="true"></div>
+            </div>
+
+            <div class="buttons">
+                <button id="predictBtn" class="btn btn-primary">Predecir</button>
+                <button id="clearBtn" class="btn btn-ghost">Borrar</button>
+            </div>
+
+            <div class="preview-block">
+                <div class="panel-label">
+                    <span>Entrada real de la red</span>
+                    <span class="dim">28×28</span>
+                </div>
+                <canvas id="preview" width="140" height="140"></canvas>
+            </div>
+        </section>
+
+        <!-- Columna de resultados -->
+        <section class="panel result-panel">
+            <div class="panel-label">
+                <span>Resultado</span>
+            </div>
+
+            <div class="result-hero">
+                <h2 id="prediction" class="prediction-line">Predicción: -</h2>
+                <div class="result-stats">
+                    <p id="confidence" class="stat-line">Confianza: -</p>
+                    <p id="time" class="stat-line">Tiempo: -</p>
+                </div>
+            </div>
+
+            <div class="panel-label bars-label">
+                <span>Probabilidades por clase</span>
+            </div>
+            <div id="bars"></div>
+        </section>
+
+    </div>
+
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
