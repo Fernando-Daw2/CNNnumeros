@@ -19,13 +19,14 @@
 
 body{
     margin:0;
-    padding: 48px 20px 64px;
+    padding: clamp(24px, 6vw, 48px) clamp(12px, 4vw, 20px) clamp(32px, 8vw, 64px);
     background:
         radial-gradient(circle at 1px 1px, rgba(0,212,255,0.06) 1px, transparent 0) 0 0 / 24px 24px,
         var(--bg);
     color: var(--text);
     font-family: var(--font-mono);
     text-align: center;
+    overflow-x: hidden;
 }
 
 .container{
@@ -56,7 +57,7 @@ body{
 h1{
     font-family: var(--font-display);
     font-weight: 700;
-    font-size: 34px;
+    font-size: clamp(24px, 6vw, 34px);
     letter-spacing: -0.01em;
     margin: 0 0 10px;
 }
@@ -68,6 +69,7 @@ h1{
     max-width: 480px;
     margin: 0 auto;
     line-height: 1.6;
+    padding: 0 4px;
 }
 
 /* ---- Layout ---- */
@@ -86,11 +88,26 @@ h1{
     }
 }
 
+@media (max-width: 380px){
+    .prediction-line{
+        font-size: 22px;
+    }
+    .value{
+        width: 48px;
+        font-size: 11px;
+    }
+    .label{
+        width: 14px;
+        font-size: 12px;
+    }
+}
+
 .panel{
     background: var(--panel);
     border: 1px solid var(--panel-border);
     border-radius: 14px;
-    padding: 24px;
+    padding: clamp(14px, 4vw, 24px);
+    min-width: 0;
 }
 
 .panel-label{
@@ -120,18 +137,23 @@ h1{
 
 .canvas-wrap{
     position: relative;
-    width: 280px;
-    height: 280px;
+    width: 100%;
+    max-width: 280px;
+    aspect-ratio: 1 / 1;
     border-radius: 10px;
     overflow: hidden;
+    margin: 0 auto;
 }
 
 canvas#canvas{
     display: block;
+    width: 100%;
+    height: 100%;
     background: #000;
     border: 2px solid var(--accent-dim);
     border-radius: 10px;
     cursor: crosshair;
+    touch-action: none; /* evita que el dedo haga scroll de la página al dibujar */
 }
 
 .grid-overlay{
@@ -148,16 +170,20 @@ canvas#canvas{
     display: flex;
     gap: 10px;
     margin: 20px 0 4px;
+    width: 100%;
+    max-width: 280px;
 }
 
 .btn{
+    flex: 1;
     font-family: var(--font-mono);
     font-weight: 600;
     font-size: 14px;
     letter-spacing: 0.02em;
-    padding: 11px 24px;
+    padding: 13px 18px;
     border-radius: 8px;
     cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
     transition: transform 0.12s ease, background 0.15s ease, border-color 0.15s ease;
 }
 
@@ -197,6 +223,8 @@ canvas#canvas{
 }
 
 canvas#preview{
+    width: min(140px, 45vw);
+    height: min(140px, 45vw);
     background: #000;
     border: 2px solid var(--accent-dim);
     border-radius: 8px;
